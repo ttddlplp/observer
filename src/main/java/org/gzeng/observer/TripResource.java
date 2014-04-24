@@ -6,6 +6,7 @@ import org.gzeng.observer.transport.Trip;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -24,6 +25,19 @@ public class TripResource {
     }
 
     public String insertTrip(Trip trip) {
+        if(trip==null){
+            throw new WebApplicationException("Trip cannot be null");
+        }
         return tripDao.insertTrip(trip);
+    }
+
+    public Trip getTrip(String tripId) {
+        if(tripId==null){
+            throw new WebApplicationException("Trip Id cannot be null");
+        }
+        if(tripId.isEmpty()){
+            throw new WebApplicationException("Trip Id cannot be empty.");
+        }
+        return tripDao.getTrip(tripId);
     }
 }

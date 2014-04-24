@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.ws.rs.WebApplicationException;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -45,5 +47,36 @@ public class TripResourceTest {
         Trip trip = new Trip();
         String result = tripResource.insertTrip(trip);
         Assert.assertEquals("TestId",result);
+    }
+
+    @Test(expected = WebApplicationException.class)
+    public void insertNull_shouldThrowException(){
+        tripResource.insertTrip(null);
+    }
+
+    @Test
+    public void getTrip_shouldReturnATrip(){
+        Trip expect = new Trip();
+        expect.setArrivalCityName("London");
+        when(mockTripDao.getTrip(anyString())).thenReturn(expect);
+
+        Trip result = tripResource.getTrip("TestId");
+        Assert.assertEquals(expect,result);
+    }
+
+    @Test(expected = WebApplicationException.class)
+    public void getTripWithEmptyString_shouldGetException(){
+        Trip expect = new Trip();
+        expect.setArrivalCityName("London");
+        when(mockTripDao.getTrip(anyString())).thenReturn(expect);
+        Trip result = tripResource.getTrip("");
+    }
+
+    @Test(expected = WebApplicationException.class)
+    public void getTripWithNull_shouldGetException(){
+        Trip expect = new Trip();
+        expect.setArrivalCityName("London");
+        when(mockTripDao.getTrip(anyString())).thenReturn(expect);
+        Trip result = tripResource.getTrip(null);
     }
 }
