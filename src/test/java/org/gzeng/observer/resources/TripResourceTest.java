@@ -1,4 +1,4 @@
-package org.gzeng.observer;
+package org.gzeng.observer.resources;
 
 import junit.framework.Assert;
 import org.gzeng.observer.dao.TripDao;
@@ -9,8 +9,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -45,13 +45,17 @@ public class TripResourceTest {
     public void insertTrip_shouldReturnTripId(){
         when(mockTripDao.insertTrip(any(Trip.class))).thenReturn("TestId");
         Trip trip = new Trip();
-        String result = tripResource.insertTrip(trip);
-        Assert.assertEquals("TestId",result);
+        Response response = tripResource.insertTrip(trip);
+        Trip resultTrip = (Trip) response.getEntity();
+        Assert.assertEquals(trip,resultTrip);
+        Assert.assertEquals("TestId", trip.getTripId());
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test(expected = WebApplicationException.class)
     public void insertNull_shouldThrowException(){
-        tripResource.insertTrip(null);
+        Response response = tripResource.insertTrip(null);
+        Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(),response.getStatus());
     }
 
     @Test
@@ -60,8 +64,8 @@ public class TripResourceTest {
         expect.setArrivalCityName("London");
         when(mockTripDao.getTrip(anyString())).thenReturn(expect);
 
-        Trip result = tripResource.getTrip("TestId");
-        Assert.assertEquals(expect,result);
+        Response response = tripResource.getTrip("TestId");
+        Assert.assertEquals(expect,response.getEntity());
     }
 
     @Test(expected = WebApplicationException.class)
@@ -69,7 +73,7 @@ public class TripResourceTest {
         Trip expect = new Trip();
         expect.setArrivalCityName("London");
         when(mockTripDao.getTrip(anyString())).thenReturn(expect);
-        Trip result = tripResource.getTrip("");
+        Response response = tripResource.getTrip("");
     }
 
     @Test(expected = WebApplicationException.class)
@@ -77,6 +81,12 @@ public class TripResourceTest {
         Trip expect = new Trip();
         expect.setArrivalCityName("London");
         when(mockTripDao.getTrip(anyString())).thenReturn(expect);
-        Trip result = tripResource.getTrip(null);
+        Response response = tripResource.getTrip(null);
+    }
+
+    @Test
+    public void deleteATrip_shouldReturnOk(){
+        Response response = tripResource.deleteTrip("TestId");
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 }

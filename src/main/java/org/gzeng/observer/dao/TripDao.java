@@ -6,6 +6,7 @@ import org.gzeng.observer.transport.Trip;
  * Created by gaoxiangzeng on 24/04/14.
  */
 public interface TripDao {
+    public boolean isTripExists(String tripId);
     public String insertTrip(Trip trip);
     public Trip getTrip(String tripId);
     public void updateTrip(Trip trip);

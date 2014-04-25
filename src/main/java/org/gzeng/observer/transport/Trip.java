@@ -20,6 +20,8 @@ public class Trip {
     private Integer numberOfInfants;
     private Boolean oneWay;
     private Boolean nonStopFlag;
+    private String user;
+    private Double price;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public String getTripId() {
@@ -150,4 +152,19 @@ public class Trip {
         this.nonStopFlag = nonStopFlag;
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 }
